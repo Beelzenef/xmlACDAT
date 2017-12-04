@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">XML ACDAT</string>
+    <string name="btn_Partes">Partes</string>
+    <string name="btn_Notas">Notas</string>
+    <string name="btn_Titulares">Titulares</string>
+    <string name="btn_Noticias">Noticias</string>
+    <string name="btn_Creacion">Creacion</string>
+    <string name="btn_Subida">Subida</string>
+    <string name="title_activity_subida">SubidaActivity</string>
+</resources>

@@ -1,0 +1,55 @@
+<LinearLayout android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              tools:context="com.example.xmlacdat.MainActivity"
+              android:orientation="vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button
+        android:id="@+id/btn_Partes"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_Partes"/>
+
+    <Button
+        android:id="@+id/btn_Notas"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_Notas"/>
+
+    <Button
+        android:id="@+id/btn_Titulares"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_Titulares"/>
+
+    <Button
+        android:id="@+id/btn_Noticas"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_Noticias"/>
+
+    <Button
+        android:id="@+id/btn_Creacion"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_Creacion"/>
+
+    <Button
+        android:id="@+id/btn_Subida"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_Subida"/>
+</LinearLayout>

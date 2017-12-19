@@ -7,4 +7,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.xmlacdat.NotasActivity">
 
+    <TextView
+        android:id="@+id/txtV_notasXML"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="XML de notas"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<alumnos>
+    <alumno>
+        <nombre>Carmelo Cotón</nombre>
+        <nota asignatura="matemáticas" fecha="15/11/2012">7</nota>
+        <observaciones>bien</observaciones>
+    </alumno>
+    <alumno>
+        <nombre>Aitor Tilla</nombre>
+        <nota asignatura="lengua" fecha="20/11/2012">3.4</nota>
+        <observaciones>regular</observaciones>
+    </alumno>
+    <alumno>
+        <nombre>Mercedes Tartalada</nombre>
+        <nota asignatura="inglés" fecha="24/11/2012">9</nota>
+        <observaciones>muy bien</observaciones>
+    </alumno>
+</alumnos>

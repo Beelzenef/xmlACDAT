@@ -1,6 +1,10 @@
 package com.example.xmlacdat.utils;
 
+import android.content.Context;
+import android.content.res.XmlResourceParser;
 import android.util.Xml;
+
+import com.example.xmlacdat.R;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -35,6 +39,66 @@ public class CheckXML {
 
         cadena.append("END DOCUMENT");
         return cadena.toString();
+    }
+
+    public static String analizarNombres(Context c) throws XmlPullParserException, IOException {
+        boolean esNombre = false;
+        boolean esNota = false;
+        StringBuilder stringResultante = new StringBuilder();
+        Double suma = 0.0;
+        int contador = 0;
+
+        XmlResourceParser xrp = c.getResources().getXml(R.xml.alumnos);
+        int eventType = xrp.getEventType();
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            switch (eventType) {
+                case XmlPullParser.START_TAG:
+                    if (xrp.getName().equals("nombre"))
+                    {
+                        esNombre = true;
+                        contador++;
+                    }
+
+                    if (xrp.getName().equals("nota"))
+                    {
+                        esNota = true;
+                        stringResultante.append(xrp.getAttributeName(0) + " : " + xrp.getAttributeValue(0) + "\n");
+                        stringResultante.append(xrp.getAttributeName(1) + " : " + xrp.getAttributeValue(1) + "\n");
+                    }
+
+                    if (xrp.getName().equals("observaciones"))
+                    {
+
+                    }
+                    break;
+                case XmlPullParser.TEXT:
+
+                    if (esNombre)
+                    {
+                        stringResultante.append("Nombre: " + xrp.getText() + "\n");
+                    }
+                    else if (esNota)
+                    {
+                        suma += Double.parseDouble(xrp.getText());
+                        stringResultante.append("Nota: " + xrp.getText() + "\n");
+                    }
+                    else {
+                        stringResultante.append("Observaciones: " + xrp.getText() + "\n\n");
+                    }
+
+                    break;
+                case XmlPullParser.END_TAG:
+                    if (xrp.getName().equals("nombre"))
+                       esNombre = false;
+                    if (xrp.getName().equals("nota"))
+                        esNota = false;
+                    break;
+            }
+            eventType = xrp.next();
+        }
+
+        stringResultante.append("Media de todas las notas : " + String.format("%.2f", suma / contador));
+        return stringResultante.toString();
     }
 
 }

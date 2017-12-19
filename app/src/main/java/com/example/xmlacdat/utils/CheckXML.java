@@ -9,6 +9,8 @@ import com.example.xmlacdat.R;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -23,7 +25,7 @@ public class CheckXML {
         XmlPullParser xpp = Xml.newPullParser();
         xpp.setInput(new StringReader(texto));
         int eventType = xpp.getEventType();
-        cadena.append("Leyendo XML:\n " );
+        cadena.append("Leyendo XML:\n ");
         while (eventType != XmlPullParser.END_DOCUMENT) {
 
             if (eventType == XmlPullParser.START_DOCUMENT)
@@ -41,7 +43,7 @@ public class CheckXML {
         return cadena.toString();
     }
 
-    public static String analizarNombres(Context c) throws XmlPullParserException, IOException {
+    public static String analizarXmlGet(Context c) throws XmlPullParserException, IOException {
         boolean esNombre = false;
         boolean esNota = false;
         StringBuilder stringResultante = new StringBuilder();
@@ -53,52 +55,122 @@ public class CheckXML {
         while (eventType != XmlPullParser.END_DOCUMENT) {
             switch (eventType) {
                 case XmlPullParser.START_TAG:
-                    if (xrp.getName().equals("nombre"))
-                    {
+                    if (xrp.getName().equals("nombre")) {
                         esNombre = true;
-                        contador++;
                     }
 
-                    if (xrp.getName().equals("nota"))
-                    {
+                    if (xrp.getName().equals("nota")) {
                         esNota = true;
-                        stringResultante.append(xrp.getAttributeName(0) + " : " + xrp.getAttributeValue(0) + "\n");
-                        stringResultante.append(xrp.getAttributeName(1) + " : " + xrp.getAttributeValue(1) + "\n");
+
+                        for (int i = 0; i < xrp.getAttributeCount(); i++) {
+                            stringResultante.append(xrp.getAttributeName(i) + ": " + xrp.getAttributeValue(i) + "\n");
+                            contador++;
+                        }
                     }
 
-                    if (xrp.getName().equals("observaciones"))
-                    {
+                    if (xrp.getName().equals("observaciones")) {
 
                     }
                     break;
                 case XmlPullParser.TEXT:
 
-                    if (esNombre)
-                    {
+                    if (esNombre) {
                         stringResultante.append("Nombre: " + xrp.getText() + "\n");
                     }
-                    else if (esNota)
-                    {
+                    else if (esNota) {
                         suma += Double.parseDouble(xrp.getText());
                         stringResultante.append("Nota: " + xrp.getText() + "\n");
                     }
                     else {
-                        stringResultante.append("Observaciones: " + xrp.getText() + "\n\n");
+                        stringResultante.append("Observaciones: " + xrp.getText() + "\n");
                     }
 
                     break;
                 case XmlPullParser.END_TAG:
                     if (xrp.getName().equals("nombre"))
-                       esNombre = false;
+                        esNombre = false;
                     if (xrp.getName().equals("nota"))
                         esNota = false;
+                    if (xrp.getName().equals("alumno"))
+                        stringResultante.append("\n");
                     break;
             }
             eventType = xrp.next();
         }
 
         stringResultante.append("Media de todas las notas : " + String.format("%.2f", suma / contador));
+        xrp.close();
         return stringResultante.toString();
+    }
+
+    public static String analizarXmlNextText(Context c) throws XmlPullParserException, IOException {
+
+        StringBuilder stringResultante = new StringBuilder();
+
+        double suma = 0.0;
+        double getNota = 0;
+        int contador = 0;
+
+
+        XmlResourceParser xrp = c.getResources().getXml(R.xml.alumnos);
+        int eventType = xrp.getEventType();
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            switch (eventType) {
+                case XmlPullParser.START_TAG:
+                    if (xrp.getName().equals("nombre")) {
+                        stringResultante.append("Nombre: " + xrp.nextText() + "\n");
+                    }
+
+                    if (xrp.getName().equals("nota")) {
+
+                        for (int i = 0; i < xrp.getAttributeCount(); i++) {
+                            stringResultante.append(xrp.getAttributeName(i) + ": " + xrp.getAttributeValue(i) + "\n");
+                            contador++;
+                        }
+
+                        getNota = Double.parseDouble(xrp.nextText());
+                        stringResultante.append("Nota: " + Double.toString(getNota) + "\n");
+                        suma += getNota;
+                    }
+                    if (xrp.getName().equals("observaciones")) {
+                        stringResultante.append("Observaciones: " + xrp.nextText() + "\n\n");
+                    }
+                    break;
+            }
+            eventType = xrp.next();
+        }
+
+        stringResultante.append("Media de todas las notas : " + String.format("%.2f", suma / contador));
+        xrp.close();
+        return stringResultante.toString();
+    }
+
+    public static String analizarRSS(File file) throws NullPointerException, XmlPullParserException, IOException {
+
+        boolean dentroItem = false;
+
+        StringBuilder builder = new StringBuilder();
+        XmlPullParser xpp = Xml.newPullParser();
+        xpp.setInput(new FileReader(file));
+
+        int eventType = xpp.getEventType();
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            switch (eventType) {
+                case XmlPullParser.START_TAG:
+                    if (xpp.getName().equals("item"))
+                        dentroItem = true;
+
+                    if (dentroItem && xpp.getName().equals("title"))
+                    {
+                        builder.append("Post: " + xpp.next() + "\n");
+                        dentroItem = false;
+                    }
+                    break;
+            }
+            eventType = xpp.next();
+        }
+        return builder.toString();
     }
 
 }

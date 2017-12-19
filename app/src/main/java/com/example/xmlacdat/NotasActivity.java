@@ -3,6 +3,7 @@ package com.example.xmlacdat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xmlacdat.utils.CheckXML;
 
@@ -18,10 +19,10 @@ public class NotasActivity extends AppCompatActivity {
         textoNotas = (TextView) findViewById(R.id.txtV_notasXML);
 
         try {
-            textoNotas.setText(CheckXML.analizarNombres(this));
+            textoNotas.setText(CheckXML.analizarXmlNextText(this));
         } catch (Exception e)
         {
-            e.getMessage();
+            Toast.makeText(this, "Error al leer XML", Toast.LENGTH_SHORT).show();
         }
     }
 

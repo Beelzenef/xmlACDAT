@@ -164,7 +164,7 @@ public class CheckXML {
                         dentroItem = true;
 
                     if (dentroItem && xpp.getName().equals("title")) {
-                        builder.append("Post: " + xpp.next() + "\n");
+                        builder.append("Post: " + xpp.nextText() + "\n");
                         dentroItem = false;
                     }
                     break;

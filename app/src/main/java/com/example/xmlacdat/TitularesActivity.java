@@ -40,7 +40,7 @@ public class TitularesActivity extends AppCompatActivity {
     private void descargarTitulares(String rss, String tmp) {
         final ProgressDialog progreso = new ProgressDialog(this);
         File miFichero = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), tmp);
-        RestClient.get(rss, new FileAsyncHttpResponseHandler(miFichero) {
+        RestClient.get(rss, new FileAsyncHttpResponseHandler(this) {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 progreso.dismiss();

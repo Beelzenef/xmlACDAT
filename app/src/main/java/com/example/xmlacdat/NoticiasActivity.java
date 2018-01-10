@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -41,9 +40,6 @@ public class NoticiasActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_noticias);
         lista = (ListView) findViewById(R.id.listView);
         lista.setOnItemClickListener(this);
-
-        adapter = new ArrayAdapter<Noticia>(this, android.R.layout.simple_list_item_1);
-
         fab_updateNews = (FloatingActionButton) findViewById(R.id.fab_updateNews);
         fab_updateNews.setOnClickListener(this);
     }
@@ -56,7 +52,6 @@ public class NoticiasActivity extends AppCompatActivity implements View.OnClickL
 
     private void descarga(String canal, String temporal) {
         final ProgressDialog progreso = new ProgressDialog(this);
-        final File miFichero = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), temporal);
         RestClient.get(canal, new FileAsyncHttpResponseHandler(this) {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
@@ -91,11 +86,12 @@ public class NoticiasActivity extends AppCompatActivity implements View.OnClickL
     private void mostrar() {
         if (listaNoticias != null)
             if (adapter == null) {
-                Toast.makeText(getApplicationContext(), "Sin datos que mostrar", Toast.LENGTH_SHORT).show();
+                adapter = new ArrayAdapter<Noticia>(this, android.R.layout.simple_list_item_1);
+                lista.setAdapter(adapter);
             }
             else {
+                adapter.clear();
                 adapter.addAll(listaNoticias);
-                lista.setAdapter(adapter);
             }
         else
             Toast.makeText(getApplicationContext(), "Error al crear la lista", Toast.LENGTH_SHORT).show();

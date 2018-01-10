@@ -2,7 +2,6 @@ package com.example.xmlacdat;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -39,7 +38,6 @@ public class TitularesActivity extends AppCompatActivity {
 
     private void descargarTitulares(String rss, String tmp) {
         final ProgressDialog progreso = new ProgressDialog(this);
-        File miFichero = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), tmp);
         RestClient.get(rss, new FileAsyncHttpResponseHandler(this) {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {

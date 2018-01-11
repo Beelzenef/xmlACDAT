@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn_Noticas:
                 unIntent = new Intent(MainActivity.this, NoticiasActivity.class);
                 break;
+            case R.id.btn_NoticasEB:
+                unIntent = new Intent(MainActivity.this, NoticiasActivityEB.class);
+                break;
             case R.id.btn_Creacion:
                 unIntent = new Intent(MainActivity.this, CreacionActivity.class);
                 break;

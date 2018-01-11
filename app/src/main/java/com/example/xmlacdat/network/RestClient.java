@@ -1,4 +1,4 @@
-package com.example.xmlacdat.utils;
+package com.example.xmlacdat.network;
 
 import android.content.Context;
 

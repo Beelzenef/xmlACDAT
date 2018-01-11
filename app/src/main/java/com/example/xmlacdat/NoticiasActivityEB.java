@@ -12,17 +12,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.xmlacdat.network.DownloadTask;
+import com.example.xmlacdat.pojo.FailureEvent;
 import com.example.xmlacdat.pojo.Noticia;
+import com.example.xmlacdat.pojo.SuccessEvent;
 import com.example.xmlacdat.utils.CheckXML;
 import com.example.xmlacdat.network.RestClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class NoticiasActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class NoticiasActivityEB extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     //public static final String CANAL = "https://geekstorming.wordpress.com/feed/";
     //public static final String TEMPORAL = "geekst.xml";
@@ -33,6 +40,8 @@ public class NoticiasActivity extends AppCompatActivity implements View.OnClickL
     ArrayList<Noticia> listaNoticias;
     ArrayAdapter<Noticia> adapter;
     FloatingActionButton fab_updateNews;
+
+    ProgressDialog progreso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,37 +59,34 @@ public class NoticiasActivity extends AppCompatActivity implements View.OnClickL
             descarga(CANAL, TEMPORAL);
     }
 
+    // Suscripción con EventBus
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(SuccessEvent event) {
+        try {
+            progreso.dismiss();
+            listaNoticias = CheckXML.analizarNoticias(event.file);
+            mostrar();
+        } catch (Exception e) {
+            Toast.makeText(NoticiasActivityEB.this, "¡Error! :(",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Subscribe
+    public void handleFailure(FailureEvent event) {
+        Toast.makeText(NoticiasActivityEB.this, event.msg,
+                Toast.LENGTH_SHORT).show();
+    }
+
     private void descarga(String canal, String temporal) {
-        final ProgressDialog progreso = new ProgressDialog(this);
-        RestClient.get(canal, new FileAsyncHttpResponseHandler(this) {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                progreso.dismiss();
-                Toast.makeText(NoticiasActivity.this, "Algo ha salido mal... :(",
-                        Toast.LENGTH_SHORT).show();
-            }
+        progreso = new ProgressDialog(this);
+        progreso.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progreso.setMessage("Descargando");
+        progreso.setCancelable(false);
+        progreso.show();
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, File file) {
-                try {
-                    progreso.dismiss();
-                    listaNoticias = CheckXML.analizarNoticias(file);
-                    mostrar();
-                } catch (Exception e) {
-                    Toast.makeText(NoticiasActivity.this, "¡Error! :(",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onStart() {
-                super.onStart();
-                progreso.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progreso.setMessage("Descargando");
-                progreso.setCancelable(false);
-                progreso.show();
-            }
-        });
+        DownloadTask.executeDownload(canal, temporal);
     }
 
     private void mostrar() {
@@ -105,6 +111,18 @@ public class NoticiasActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
         else
             Toast.makeText(getApplicationContext(), "No hay un navegador", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
 }

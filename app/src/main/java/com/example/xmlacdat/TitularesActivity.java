@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xmlacdat.utils.CheckXML;
-import com.example.xmlacdat.utils.RestClient;
+import com.example.xmlacdat.network.RestClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
 import java.io.File;

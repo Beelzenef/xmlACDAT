@@ -38,6 +38,14 @@
         android:text="@string/btn_Noticias"/>
 
     <Button
+        android:id="@+id/btn_NoticasEB"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:onClick="onClick_lanzarExs"
+        android:text="@string/btn_NoticiasEB"/>
+
+    <Button
         android:id="@+id/btn_Creacion"
         android:layout_gravity="center"
         android:layout_height="wrap_content"

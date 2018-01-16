@@ -2,6 +2,7 @@ package com.example.xmlacdat.utils;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.os.Environment;
 import android.util.Xml;
 
 import com.example.xmlacdat.R;
@@ -9,8 +10,10 @@ import com.example.xmlacdat.pojo.Noticia;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -221,5 +224,43 @@ public class CheckXML {
         }
         //devolver el array de noticias
         return noticias;
+    }
+
+    public static void crearXML(ArrayList<Noticia> listaNoticias, String fichero) throws IOException {
+        FileOutputStream fout;
+        fout = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fichero));
+        XmlSerializer serializer = Xml.newSerializer();
+        serializer.setOutput(fout, "UTF-8");
+        serializer.startDocument(null, true);
+
+        // Settear tabulación
+        serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+
+        serializer.startTag(null, "titulares");
+        for (Noticia noticia : listaNoticias) {
+
+            serializer.startTag(null, "item");
+
+            // Elemento titulo
+            serializer.startTag(null, "titulo");
+            serializer.attribute(null, "fecha", noticia.getPubDate());
+            serializer.text(noticia.getTitle());
+            serializer.endTag(null, "titulo");
+            // Elemento link
+            serializer.startTag(null, "enlace");
+            serializer.text(noticia.getLink());
+            serializer.endTag(null, "enlace");
+            // Elemento descripcion
+            serializer.startTag(null, "descripcion");
+            serializer.text(noticia.getDescription());
+            serializer.endTag(null, "descripcion");
+
+            serializer.endTag(null, "item");
+        }
+
+        serializer.endTag(null, "titulares");
+        serializer.endDocument();
+        serializer.flush();
+        fout.close();
     }
 }
